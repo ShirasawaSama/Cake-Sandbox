@@ -239,6 +239,22 @@ void freeProcess(Process &p) {
     CloseHandle(p.hStdErrWrite);
 }
 
+// Visual Studio 2017 is required
+#if defined(COMPILER_MSVC)
+#pragma optimize("", off)
+#elif defined(__clang__)
+#pragma clang optimize off
+#endif
+
+void p(const void* var) {
+}
+
+#if defined(COMPILER_MSVC)
+#pragma optimize("", on)
+#elif defined(__clang__)
+#pragma clang optimize on
+#endif
+
 int wmain(int argc, wchar_t *argv[]) {
     if (argc >= 1) {
         wchar_t name[] = L"CakeSandbox";
@@ -249,6 +265,8 @@ int wmain(int argc, wchar_t *argv[]) {
         wchar_t aaa[] = L"C:\\server_dir";
         safeDirs.push_back({dir, FILE_ALL_ACCESS});
         safeDirs.push_back({aaa, FILE_READ_ACCESS});
+		
+		p(&safeDirs);
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wempty-body"
