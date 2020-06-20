@@ -40,7 +40,7 @@ typedef struct {
     HANDLE hStdErrWrite;
 } Process;
 
-typedef std::shared_ptr<std::remove_pointer<PSID>::type> SHARED_SID;
+typedef std::shared_ptr<typename std::remove_pointer<PSID>::type> SHARED_SID;
 
 const WELL_KNOWN_SID_TYPE capabilityTypeList[] = {
         WinCapabilityInternetClientSid,
@@ -284,7 +284,9 @@ int wmain(int argc, wchar_t *argv[]) {
             std::cout << "Success!" << std::endl;
 
             DWORD code;
-            while (!GetExitCodeProcess(process.process.hProcess, &code));
+            //Wait for process
+            WaitForSingleObject(process.process.hProcess,INFINITE);
+            GetExitCodeProcess(process.process.hProcess, &code);
             std::cout << "Quit: " << code << std::endl;
         } else {
             std::cout << "Failed: " << GetLastError() << std::endl;
